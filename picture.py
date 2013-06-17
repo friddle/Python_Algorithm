@@ -65,7 +65,7 @@ def exposure():
 	    else:
 	       value[i]=gray[i]
 	 pixel[width,height]=(value[0],value[1],value[2])
-def mosaic(num):
+def sharpen(num):
    global im
    pregray=None
    for width in range(imgwidth):
@@ -78,6 +78,28 @@ def mosaic(num):
 	       pregray=im.getpixel((width+num/2,height+num/2))
 	 else:
 	    pixel[width,height]=(pregray[0],pregray[1],pregray[2]) 
+
+def mosaic(num):
+   global im
+   pregray=None
+   for width in range(imgwidth):
+      for height in range(imgheight):
+	 pixel=im.load()
+	 if width%num==0 or height%num==0:
+	    if width+num>imgwidth or height+num>imgheight:
+	       pass
+	    else:
+	       pregray=[0,0,0]
+	       sum=num*num
+	       for i in range(num):
+		  for j in range(num):
+	            pregray[0]+=im.getpixel((width+i,height+j))[0]
+	            pregray[1]+=im.getpixel((width+i,height+j))[1]
+	            pregray[2]+=im.getpixel((width+i,height+j))[2]
+	            pixel[width,height]=(pregray[0]/sum,pregray[1]/sum,pregray[2]/sum) 
+	 else:
+	    pixel[width,height]=(pregray[0],pregray[1],pregray[2]) 
+
 	 
 def relief():
    global im
@@ -188,13 +210,13 @@ def wavewrap(center):
 def main():
    #BlackAndWhite()
  Color=[255,0,0]
- MakeColor(Color)
+ #MakeColor(Color)
  #ImageReversal()
  #exposure()
- #mosaic(4)
+ mosaic(8)
  #relief()
  #neoneffect()
- im.save("output2.png")
+ im.save("mosaic.png")
  Center=[imgwidth/2,imgheight/2]
  i=5
  #while True:
